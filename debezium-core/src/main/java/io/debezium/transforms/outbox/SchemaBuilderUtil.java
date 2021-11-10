@@ -49,7 +49,7 @@ public class SchemaBuilderUtil {
         final String fieldName = fieldEntry.getKey();
         final JsonNode fieldValue = fieldEntry.getValue();
         final Schema fieldSchema = jsonValueToSchema(fieldValue);
-        if (fieldSchema != null) {
+        if (fieldSchema != null && builder.field(fieldName) == null) {
             builder.field(fieldName, fieldSchema);
         }
     }
@@ -75,7 +75,9 @@ public class SchemaBuilderUtil {
                 }
                 return Schema.OPTIONAL_FLOAT64_SCHEMA;
             case ARRAY:
-                return SchemaBuilder.array(findArrayMemberSchema((ArrayNode) node)).optional().build();
+
+                Schema build = SchemaBuilder.array(findArrayMemberSchema((ArrayNode) node)).optional().build();
+                return build;
             case OBJECT:
                 return jsonNodeToSchema(node);
             default:
